@@ -48,7 +48,9 @@ app.get('/api/upload', (req, res) => {
 // Create new chat
 app.post('/api/chats', async (req, res) => {
   const { text } = req.body;
-  const userId = 'public-user'; // Static ID since auth is removed
+  const userId = req.query.userId;
+  if (!userId) return res.status(400).send('Missing userId');
+  // Static ID since auth is removed
 
   try {
     const newChat = new Chat({
@@ -94,7 +96,8 @@ app.post('/api/chats', async (req, res) => {
 
 // Get all user chats
 app.get('/api/userchats', async (req, res) => {
-  const userId = 'public-user';
+  const userId = req.query.userId;
+  if (!userId) return res.status(400).send('Missing userId');
 
   try {
     const userChats = await UserChats.find({ userId });
@@ -107,7 +110,8 @@ app.get('/api/userchats', async (req, res) => {
 
 // Get a specific chat
 app.get('/api/chats/:id', async (req, res) => {
-  const userId = 'public-user';
+  const userId = req.query.userId;
+  if (!userId) return res.status(400).send('Missing userId');
 
   try {
     const chat = await Chat.findOne({ _id: req.params.id, userId });
@@ -120,7 +124,9 @@ app.get('/api/chats/:id', async (req, res) => {
 
 // Update a chat with new question/answer
 app.put('/api/chats/:id', async (req, res) => {
-  const userId = 'public-user';
+  const userId = req.query.userId;
+  if (!userId) return res.status(400).send('Missing userId');
+
   const { question, answer, img } = req.body;
 
   const newItems = [

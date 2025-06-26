@@ -1,3 +1,4 @@
+import { getAnonymousUserId } from "../../utils/getAnonymousUserId";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import "./dashboardPage.css";
 import { useNavigate } from "react-router-dom";
@@ -6,10 +7,12 @@ const DashboardPage = () => {
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
-
+  
   const mutation = useMutation({
     mutationFn: (text) => {
-      return fetch(`${import.meta.env.VITE_API_URL}/api/chats`, {
+      const userId = getAnonymousUserId();
+    
+      return fetch(`${import.meta.env.VITE_API_URL}/api/chats?userId=${userId}`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -17,7 +20,7 @@ const DashboardPage = () => {
         },
         body: JSON.stringify({ text }),
       }).then((res) => res.json());
-    },
+    },    
     onSuccess: (id) => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["userChats"] });

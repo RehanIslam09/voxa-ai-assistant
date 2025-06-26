@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import "./chatList.css";
 import { useQuery } from "@tanstack/react-query";
+import { getAnonymousUserId } from "../../utils/getAnonymousUserId";
 
 const ChatList = () => {
+  const userId = getAnonymousUserId(); // ✅ Use anonymous ID
+
   const { isPending, error, data } = useQuery({
     queryKey: ["userChats"],
     queryFn: () =>
-      fetch(`${import.meta.env.VITE_API_URL}/api/userchats`, {
+      fetch(`${import.meta.env.VITE_API_URL}/api/userchats?userId=${userId}`, {
         credentials: "include",
       }).then((res) => res.json()),
   });
